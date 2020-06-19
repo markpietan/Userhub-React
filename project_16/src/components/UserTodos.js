@@ -6,7 +6,7 @@ const UserTodos = ({
   currentUser,
   userTodos
 }) => {
-  const obj = {color: "red"}
+ 
   return (
     <div className="user-todos">
       <h2>Todos By { currentUser.username }</h2>
