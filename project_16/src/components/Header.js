@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 
 import "./Header.css";
 
+import {
+  storeCurrentUser,
+  clearCurrentUser
+} from '../auth';
+
+import {
+NavLink
+} from "react-router-dom";
+
 // import {
 //     getUsers
 //   } from './api/index.js';
@@ -11,7 +20,7 @@ const Header = ({ currentUser, setCurrentUser, userList }) => {
 
   useEffect(() => {
     setSelectedUser(userList[0]);
-    console.log("use effect")
+    console.log("use effect");
   }, [userList]);
 
   const handleSubmit = (event) => {
@@ -26,21 +35,31 @@ const Header = ({ currentUser, setCurrentUser, userList }) => {
 
   const handleUserLogin = (event) => {
     setCurrentUser(selectedUser);
+    storeCurrentUser(selectedUser)
   };
 
   const handleUserLogout = (event) => {
     setSelectedUser(userList[0]);
     setCurrentUser(null);
+    clearCurrentUser()
   };
 
   return (
     <header>
       <h1>Welcome to UserHub</h1>
       <form className="user-select" onSubmit={handleSubmit}>
-        {currentUser ? (
-          <button onClick={handleUserLogout}>
-            LOG OUT, {currentUser.username}
-          </button>
+        {currentUser !== null ? (
+          <>
+            <NavLink to="/posts" activeClassName="current">
+              POSTS
+            </NavLink>
+            <NavLink to="/todos" activeClassName="current">
+              TODOS
+            </NavLink>
+            <button onClick={handleUserLogout}>
+              LOG OUT, {currentUser.username}
+            </button>
+          </>
         ) : (
           <>
             <select onChange={handleSelectChange}>

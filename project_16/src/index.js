@@ -9,9 +9,18 @@ import {
   getTodosByUser, // NEW
 } from "./api/index.js";
 
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
+
+import { getCurrentUser } from "./auth";
+
 const App = () => {
   const [userList, setUserList] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(getCurrentUser());
   const [userPosts, setUserPosts] = useState([]);
   const [userTodos, setUserTodos] = useState([]); // NEW
 
@@ -54,19 +63,53 @@ const App = () => {
   }, [currentUser]);
 
   return (
-    <div id="App">
-      <Header
-        userList={userList}
-        currentUser={currentUser}
-        setCurrentUser={setCurrentUser}
-      />
-      {currentUser !== null ? ( // MODIFIED
-        <div>
-          <UserPosts userPosts={userPosts} currentUser={currentUser} />
-          <UserTodos userTodos={userTodos} currentUser={currentUser} />
-        </div>
-      ) : null}
-    </div>
+    <Router>
+      <div id="App">
+        <Header
+          userList={userList}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        />
+
+        {currentUser !== null ? ( // MODIFIED
+          <div>
+            <Switch>
+              <Route path="/todos">
+                <UserTodos userTodos={userTodos} currentUser={currentUser} />
+              </Route>
+              <Route path="/posts">
+                <UserPosts userPosts={userPosts} currentUser={currentUser} />
+              </Route>
+              <Route exact path="/">
+                <h2
+                  style={{
+                    padding: ".5em",
+                  }}
+                >
+                  Welcome, {currentUser.username}!
+                </h2>
+              </Route>
+              <Redirect to="/" />
+            </Switch>
+          </div>
+        ) : (
+          <>
+            <Switch>
+              <Route exact path="/">
+                <h2
+                  style={{
+                    padding: ".5em",
+                  }}
+                >
+                  Please log in, above.
+                </h2>
+              </Route>
+              <Redirect to="/" />
+            </Switch>
+          </>
+        )}
+      </div>
+    </Router>
   );
 };
 
