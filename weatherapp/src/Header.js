@@ -10,15 +10,15 @@ const Header = () => {
                  <li className= "section">
                     <Link to= "/city_search">City Name Search</Link>
                  </li>
-                 <span class="divider">/</span>
+                 <span className="divider">/</span>
                  <li className= "section">
                      <Link to="/zip_code_search"> Zip Code Search</Link>
                  </li>
-                 <span class="divider">/</span>
+                 <span className="divider">/</span>
                  <li className= "section">
                      <Link to= "/geographic_search"> Geographic Coordinates Search</Link>
                  </li>
-                 <span class="divider">/</span>
+                 <span className="divider">/</span>
              </ul>
          </nav>
         </header>

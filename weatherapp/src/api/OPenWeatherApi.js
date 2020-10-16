@@ -6,7 +6,7 @@ const openWeatherCityName = axios.create({
     params: {
         
         appid: "5dd22c53579207aa4f23d8438bd2334a",
-        cnt: 7,
+       
         
     }
 })

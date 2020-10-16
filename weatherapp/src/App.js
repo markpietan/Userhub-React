@@ -1,8 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import CitySearch from "./CitySearch";
-import ZipCodeSearch from "./ZipCodeSearch";
-import GeoCoordSearch from "./GeoCoordSearch";
+import Weatherpage from "./Weatherpage";
 import "./App.css";
 import { Route, Switch, Link } from "react-router-dom";
 function App() {
@@ -10,19 +8,15 @@ function App() {
     <main>
       <Header></Header>
       <Route path="/city_search" exact>
-        <CitySearch></CitySearch>
+        <Weatherpage parameterName="q" title= "City Search"></Weatherpage>
       </Route>
       <Route path="/zip_code_search" exact>
-        {" "}
-        <ZipCodeSearch></ZipCodeSearch>
+        <Weatherpage parameterName="zip" title= "Zip Code Search"></Weatherpage>
       </Route>
 
-      <Route path="/geographic_search" exact>
-        <GeoCoordSearch></GeoCoordSearch>
-      </Route>
+      <Route path="/geographic_search" exact></Route>
     </main>
   );
 }
 
-// 5dd22c53579207aa4f23d8438bd2334a
 export default App;
