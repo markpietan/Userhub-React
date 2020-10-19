@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { debounce } from "lodash";
-
+import OneCall from "./api/OpenOneCallApi"
 import openWeather from "./api/OPenWeatherApi";
 import TodayWeather from "./TodayWeather";
 const Weatherpage = ({ parameterName, title}) => {
@@ -10,7 +10,22 @@ const Weatherpage = ({ parameterName, title}) => {
   useEffect(() => {
     const debouncedSearch = debounce(openWeather.get, 800);
     debounceSearchRef.current = debouncedSearch;
-  }, []);
+  }, []); 
+  useEffect(()=>{
+      const forecastRequest = async () => {
+       let response = await OneCall.get('', {
+           params : {
+                lat : results.coord.lat,
+                lon : results.coord.lon
+                
+           }
+       })
+       console.log(response.data)
+      }
+   if (results !== null) {
+     forecastRequest()
+   }
+  }, [results])
   useEffect(() => {
     const networkRequest = async () => {
         console.log(text)

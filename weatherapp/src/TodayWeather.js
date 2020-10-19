@@ -12,7 +12,7 @@ return (
       <div className="event">
         <div className="content">
           <div className="summary">
-              <img src= {`http://openweathermap.org/img/wn/${results.weather[0].icon}.png`}></img>
+              <img src= {`http://openweathermap.org/img/wn/${results.weather[0].icon}.png`} alt= {`Weather Forecast`}></img>
           {results.weather[0].description}</div>
         </div>
       </div>
