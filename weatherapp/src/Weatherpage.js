@@ -3,10 +3,12 @@ import { debounce } from "lodash";
 import OneCall from "./api/OpenOneCallApi"
 import openWeather from "./api/OPenWeatherApi";
 import TodayWeather from "./TodayWeather";
+import SevenDayForecast from "./SevenDayForcast";
 const Weatherpage = ({ parameterName, title}) => {
   const [text, setText] = useState("");
   const debounceSearchRef = useRef(null);
-  const [results, setResults] = useState(null);
+  const [todayWeather, settodayWeather] = useState(null);
+  const [forecastWeather, setforecastWeather] = useState(null);
   useEffect(() => {
     const debouncedSearch = debounce(openWeather.get, 800);
     debounceSearchRef.current = debouncedSearch;
@@ -15,17 +17,22 @@ const Weatherpage = ({ parameterName, title}) => {
       const forecastRequest = async () => {
        let response = await OneCall.get('', {
            params : {
-                lat : results.coord.lat,
-                lon : results.coord.lon
+                lat : todayWeather.coord.lat,
+                lon : todayWeather.coord.lon
                 
            }
        })
        console.log(response.data)
+       let weatherArray = response.data.daily
+       weatherArray.shift()
+       setforecastWeather(weatherArray)
       }
-   if (results !== null) {
+   if (todayWeather !== null) {
      forecastRequest()
    }
-  }, [results])
+  }, [todayWeather])
+
+  
   useEffect(() => {
     const networkRequest = async () => {
         console.log(text)
@@ -35,7 +42,7 @@ const Weatherpage = ({ parameterName, title}) => {
           [parameterName]: text
         },
       });
-      setResults(response.data)
+      settodayWeather(response.data)
     };
     
     if(text !== "") {
@@ -50,7 +57,7 @@ const Weatherpage = ({ parameterName, title}) => {
           <input
             onChange={ (e) => {
               setText(e.target.value);
-            }}
+            }}e
             value={text}
             type="text"
             name="City Name"
@@ -58,8 +65,11 @@ const Weatherpage = ({ parameterName, title}) => {
           ></input>
         </div>
       </form>
-      {results === null ? null : (
-        <TodayWeather results={results}></TodayWeather>
+      {todayWeather === null ? null : (
+        <TodayWeather results={todayWeather}></TodayWeather>
+      )}
+         {forecastWeather === null ? null : (
+        <SevenDayForecast forecastWeather={forecastWeather}></SevenDayForecast>
       )}
     </section>
   );

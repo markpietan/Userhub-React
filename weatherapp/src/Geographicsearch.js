@@ -3,6 +3,7 @@ import { debounce } from "lodash";
 
 import openWeather from "./api/OPenWeatherApi";
 import TodayWeather from "./TodayWeather";
+import SevenDayForecast from "./SevenDayForcast";
 const Geographicsearch = () => {
   const [long, setLong] = useState("");
   const [lat, setLat] = useState("");
@@ -68,6 +69,9 @@ const Geographicsearch = () => {
       </form>
       {results === null ? null : (
         <TodayWeather results={results}></TodayWeather>
+      )}
+      {results === null ? null : (
+        <SevenDayForecast results={results}></SevenDayForecast>
       )}
     </section>
   );
