@@ -1,51 +1,73 @@
-import React, { useState, useRef, useEffect } from "react";
-import { debounce } from "lodash";
+import React, { useState, useEffect } from "react";
 
+import OneCall from "./api/OpenOneCallApi";
 import openWeather from "./api/OPenWeatherApi";
 import TodayWeather from "./TodayWeather";
 import SevenDayForecast from "./SevenDayForcast";
 const Geographicsearch = () => {
   const [long, setLong] = useState("");
   const [lat, setLat] = useState("");
-  const debounceSearchRef = useRef(null);
-  const [results, setResults] = useState(null);
-  useEffect(() => {
-    const debouncedSearch = debounce(openWeather.get, 800);
-    debounceSearchRef.current = debouncedSearch;
-  }, []);
+  const [debounceTerm, setdebounceTerm] = useState({});
+  const [forecastWeather, setforecastWeather] = useState(null);
+  const [todayWeather, settodayWeather] = useState(null);
+
   useEffect(() => {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position){
-           setLong(position.coords.longitude)
-           setLat(position.coords.latitude)
-        });
-      }
-    
-  }, [])
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setLong(position.coords.longitude);
+        setLat(position.coords.latitude);
+      });
+    }
+  }, []);
   useEffect(() => {
-    const networkRequest = async () => {
- 
-
-      let response = await openWeather.get("", {
+    const forecastRequest = async () => {
+      let response = await OneCall.get("", {
         params: {
-          lat : lat,
-          lon : long
+          lat: todayWeather.coord.lat,
+          lon: todayWeather.coord.lon,
         },
       });
-      setResults(response.data)
+      console.log(response.data);
+      let weatherArray = response.data.daily;
+      weatherArray.shift();
+      setforecastWeather(weatherArray);
     };
-    
-    if(lat !== "" && long !== "") {
-        networkRequest() 
+    if (todayWeather !== null) {
+      forecastRequest();
+    }
+  }, [todayWeather]);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (lat !== "" && long !== "") {
+        setdebounceTerm({ lat: lat, long: long });
+      }
+    }, 500);
+    return function(){
+      clearTimeout(id)
     }
   }, [lat, long]);
+  useEffect(() => {
+    const networkRequest = async () => {
+      let response = await openWeather.get("", {
+        params: {
+          lat: lat,
+          lon: long,
+        },
+      });
+      settodayWeather(response.data);
+    };
+
+    if (lat !== "" && long !== "") {
+      networkRequest();
+    }
+  }, [debounceTerm]);
   return (
     <section className="ui container">
       <form className="ui form">
         <div className="field">
           <label htmlFor="Longitude">Longitude Coordinant</label>
           <input
-            onChange={ (e) => {
+            onChange={(e) => {
               setLong(e.target.value);
             }}
             value={long}
@@ -57,7 +79,7 @@ const Geographicsearch = () => {
         <div className="field">
           <label htmlFor="Latitude">Latitude Coordinant</label>
           <input
-            onChange={ (e) => {
+            onChange={(e) => {
               setLat(e.target.value);
             }}
             value={lat}
@@ -67,11 +89,11 @@ const Geographicsearch = () => {
           ></input>
         </div>
       </form>
-      {results === null ? null : (
-        <TodayWeather results={results}></TodayWeather>
+      {todayWeather === null ? null : (
+        <TodayWeather results={todayWeather}></TodayWeather>
       )}
-      {results === null ? null : (
-        <SevenDayForecast results={results}></SevenDayForecast>
+      {forecastWeather === null ? null : (
+        <SevenDayForecast forecastWeather={forecastWeather}></SevenDayForecast>
       )}
     </section>
   );
