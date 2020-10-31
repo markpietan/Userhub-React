@@ -10,10 +10,10 @@ function App() {
     <main>
       <Header></Header>
       <Route path="/city_search" exact>
-        <Weatherpage parameterName="q" title= "City Search"></Weatherpage>
+        <Weatherpage parameterName="q" title= "City Search" localStorageKey= "cityHistory"></Weatherpage>
       </Route>
       <Route path="/zip_code_search" exact>
-        <Weatherpage parameterName="zip" title= "Zip Code Search"></Weatherpage>
+        <Weatherpage parameterName="zip" title= "Zip Code Search" localStorageKey= "zipHistory"></Weatherpage>
       </Route>
        
       <Route path="/geographic_search" exact> 

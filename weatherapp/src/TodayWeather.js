@@ -2,6 +2,7 @@ import React from 'react'
     
 const TodayWeather = ({results}) => {
 return (
+  <div id= "today" style={{display: "flex", justifyContent: "center", margin: "15px 0"}}>
     <div className="ui card">
   <div className="content">
 <div className="header">{results.name}</div>
@@ -34,6 +35,7 @@ return (
       </div>
     </div>
   </div>
+</div>
 </div>
 )
 }

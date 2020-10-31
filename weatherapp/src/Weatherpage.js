@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { debounce } from "lodash";
+import { debounce} from "lodash";
 import OneCall from "./api/OpenOneCallApi";
 import openWeather from "./api/OPenWeatherApi";
 import TodayWeather from "./TodayWeather";
 import SevenDayForecast from "./SevenDayForcast";
-const Weatherpage = ({ parameterName, title }) => {
+
+const Weatherpage = ({ parameterName, title, localStorageKey }) => {
   const [text, setText] = useState("");
   const debounceSearchRef = useRef(null);
   const [todayWeather, settodayWeather] = useState(null);
@@ -30,6 +31,24 @@ const Weatherpage = ({ parameterName, title }) => {
     }
   };
   useEffect(() => {
+   const citiesSearched = localStorage.getItem(localStorageKey)
+   console.log(citiesSearched)
+   if (citiesSearched === null && text !== ''){
+     let arr = []
+     arr.push(text)
+     localStorage.setItem(localStorageKey, JSON.stringify(arr))
+   } else if (text !== ""){
+     console.log(citiesSearched)
+     let parsedCities = JSON.parse(citiesSearched)
+     parsedCities.push(text)
+     let mySet = new Set(parsedCities)
+     console.log(mySet)
+     let finalArray = Array.from(mySet)
+     localStorage.setItem(localStorageKey, JSON.stringify(finalArray))
+   }
+  },[todayWeather])
+
+  useEffect(() => {
     const forecastRequest = async () => {
       let response = await OneCall.get("", {
         params: {
@@ -51,7 +70,7 @@ const Weatherpage = ({ parameterName, title }) => {
     debounceSearchRef.current(text)
   }, [text]);
   return (
-    <section className="ui container">
+    <section className="ui container" id= "weather">
       <form className="ui form">
         <div className="field">
           <label htmlFor="City Name">{title}</label>
