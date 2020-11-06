@@ -1,12 +1,13 @@
-import React from "react";
+import React , {useState} from "react";
 import "./SevenDayForecast.css";
-
-const SevenDayForecast = ({ forecastWeather }) => {
+import { CSSTransition } from 'react-transition-group'
+const SevenDayForecast = ({ forecastWeather, triggerAnim }) => {
   console.log(forecastWeather);
   return (
     <section>
+      <CSSTransition in= {triggerAnim} timeout= {500} classNames= "Seven" appear= {true}>
       <div className="ui cards" id= "sevenday">
-        {forecastWeather.map((currentWeather) => {
+        {forecastWeather !== null && forecastWeather.map((currentWeather) => {
           var date = new Date(currentWeather.dt * 1000);
           // Hours part from the timestamp
           var year = date.getFullYear();
@@ -21,7 +22,7 @@ const SevenDayForecast = ({ forecastWeather }) => {
           console.log(formattedTime);
 
           return (
-            <div className="card">
+            <div className="card" key= {currentWeather.dt}>
               <div className="content">
                 <div className="header">{formattedTime}</div>
                 <div className="meta">
@@ -41,6 +42,7 @@ const SevenDayForecast = ({ forecastWeather }) => {
           );
         })}
       </div>
+      </CSSTransition>
     </section>
   );
 };

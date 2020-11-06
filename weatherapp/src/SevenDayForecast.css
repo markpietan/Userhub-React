@@ -1,3 +1,28 @@
 #sevenday {
     justify-content: center;
+    transition: font-size 0.5s;
+    /* animation-name: mymove;
+    animation-duration: 1s; */
 }
+
+@keyframes mymove { 
+    from {opacity: 0;} 
+    to {opacity: 1;} 
+} 
+
+.Seven-enter {
+    opacity: 0;
+}
+
+.Seven-enter-active {
+    opacity: 1;
+    transition: all 1s;
+}
+
+#sevenday:hover{
+    transition: font-size 0.5s;
+    font-size: larger;
+}
+
+
+

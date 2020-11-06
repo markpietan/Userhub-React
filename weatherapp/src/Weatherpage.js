@@ -4,12 +4,14 @@ import OneCall from "./api/OpenOneCallApi";
 import openWeather from "./api/OPenWeatherApi";
 import TodayWeather from "./TodayWeather";
 import SevenDayForecast from "./SevenDayForcast";
+import Dropdown from "./Dropdown";
 
-const Weatherpage = ({ parameterName, title, localStorageKey }) => {
+const Weatherpage = ({ parameterName, title, localStorageKey}) => {
   const [text, setText] = useState("");
   const debounceSearchRef = useRef(null);
   const [todayWeather, settodayWeather] = useState(null);
   const [forecastWeather, setforecastWeather] = useState(null);
+  const [triggerAnim, setTriggerAnim] = useState(false)
   useEffect(() => {
     const debouncedSearch = debounce(debounceWeatherSearch, 500);
     debounceSearchRef.current = debouncedSearch;
@@ -60,6 +62,8 @@ const Weatherpage = ({ parameterName, title, localStorageKey }) => {
       let weatherArray = response.data.daily;
       weatherArray.shift();
       setforecastWeather(weatherArray);
+      setTriggerAnim(true)
+      //change in prop to true from false
     };
     if (todayWeather !== null) {
       forecastRequest();
@@ -78,20 +82,20 @@ const Weatherpage = ({ parameterName, title, localStorageKey }) => {
             onChange={(e) => {
               setText(e.target.value);
             }}
-            e
             value={text}
             type="text"
             name="City Name"
             placeholder="City Name"
           ></input>
+          <Dropdown searchHistory= {localStorage.getItem(localStorageKey)} setText= {setText}></Dropdown>
         </div>
       </form>
       {todayWeather === null ? null : (
         <TodayWeather results={todayWeather}></TodayWeather>
       )}
-      {forecastWeather === null ? null : (
-        <SevenDayForecast forecastWeather={forecastWeather}></SevenDayForecast>
-      )}
+    
+        <SevenDayForecast triggerAnim= {triggerAnim} forecastWeather={forecastWeather}></SevenDayForecast>
+    
     </section>
   );
 };
